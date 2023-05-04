@@ -2,32 +2,33 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { EmbedContext } from "./provider";
 
 export interface EmbedProps {
+  // the url to embed
   url: string;
+  // the max width of the embed
   maxwidth?: string;
+  // the max height of the embed
   maxheight?: string;
+  // the placeholder to show while loading
   placeholder?: React.ReactNode;
+  // the error to show if the embed fails
   error?: React.ReactNode;
-  providerService?: string;
 }
 
 export const Embed = (props: EmbedProps) => {
   const { url, maxwidth, maxheight, placeholder, error } = props;
   const [loading, setLoading] = useState(true);
   const [oembedHtml, setOEmbedHtml] = useState<string>("");
-  const { addScripts } = useContext(EmbedContext);
-
-  const provider =
-    props.providerService ?? `https://cardboard-web.vercel.app/api/v1`;
+  const { addScripts, providerService } = useContext(EmbedContext);
 
   const getOEmbedData = useCallback(async () => {
-    if (!url) {
+    if (!url || !providerService) {
       return;
     }
 
     setLoading(true);
 
     // fetch the oembed data
-    const res = await fetch(provider, {
+    const res = await fetch(providerService, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +50,7 @@ export const Embed = (props: EmbedProps) => {
     setOEmbedHtml(oembedDoc.body.innerHTML);
 
     setLoading(false);
-  }, [provider, url, maxheight, maxwidth, addScripts]);
+  }, [providerService, url, maxheight, maxwidth, addScripts]);
 
   useEffect(() => {
     getOEmbedData();
