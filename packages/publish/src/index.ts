@@ -1,1 +1,4 @@
-export { Embed as Cardboard } from "@cardboard/shared";
+export {
+  Embed as Cardboard,
+  EmbedProps as CardboardProps,
+} from "@cardboard/shared";

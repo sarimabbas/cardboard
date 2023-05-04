@@ -2,18 +2,20 @@ import InnerHTML from "dangerously-set-html-content";
 import { useCallback, useEffect, useState } from "react";
 import { OEmbedResponse } from "../types";
 
-const provider = process.env.EMBED_PROVIDER ?? "http://localhost:3000/api/v1";
-
-interface EmbedProps {
+export interface EmbedProps {
   url: string;
   maxwidth?: string;
   maxheight?: string;
   placeholder?: React.ReactNode;
+  providerService?: string;
 }
 
 export const Embed = (props: EmbedProps) => {
   const { url, maxwidth, maxheight, placeholder } = props;
   const [oembedData, setOEmbedData] = useState<OEmbedResponse | null>(null);
+
+  const provider =
+    props.providerService ?? `https://cardboard-web.vercel.app/api/v1`;
 
   const getOEmbedData = useCallback(
     async (url: string, maxwidth?: string, maxheight?: string) => {
