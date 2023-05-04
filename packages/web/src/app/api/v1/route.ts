@@ -2,10 +2,6 @@ import { OEmbedProvider } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import normalizeUrl from "normalize-url";
 
-const commonHeaders: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-};
-
 export async function POST(request: NextRequest) {
   const { url, maxheight, maxwidth } = await request.json();
 
@@ -34,7 +30,7 @@ export async function POST(request: NextRequest) {
       {
         error: "No provider found",
       },
-      { status: 404, headers: commonHeaders }
+      { status: 404 }
     );
   }
 
@@ -47,7 +43,7 @@ export async function POST(request: NextRequest) {
       {
         error: "No endpoint found",
       },
-      { status: 404, headers: commonHeaders }
+      { status: 404 }
     );
   }
 
@@ -66,8 +62,12 @@ export async function POST(request: NextRequest) {
   const json = await response.json();
 
   // return the oembed data
-  return NextResponse.json(json, { headers: commonHeaders });
+  return NextResponse.json(json);
 }
+
+export const OPTIONS = async (request: NextRequest) => {
+  return new Response();
+};
 
 // https://github.com/vercel/next.js/issues/48770
 export const GET = async (request: NextRequest) => {
