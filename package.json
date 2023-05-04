@@ -12,5 +12,5 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@7.15.0",
-  "name": "emerald"
+  "name": "@sarim.garden/emerald"
 }

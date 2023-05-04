@@ -1,4 +1,4 @@
-import { OEmbedProvider } from "@/contract";
+import { OEmbedProvider } from "@/types";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
