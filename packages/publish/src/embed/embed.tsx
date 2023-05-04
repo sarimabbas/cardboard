@@ -1,5 +1,3 @@
-"use client";
-
 import InnerHTML from "dangerously-set-html-content";
 import { useCallback, useEffect, useState } from "react";
 import { OEmbedResponse } from "../types";

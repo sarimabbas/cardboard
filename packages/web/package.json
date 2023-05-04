@@ -23,6 +23,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "^3.21.4",
-    "@cardboard/shared": "workspace:*"
+    "@sarim.garden/cardboard": "workspace:*"
   }
 }
