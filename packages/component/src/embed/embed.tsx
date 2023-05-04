@@ -12,10 +12,12 @@ export interface EmbedProps {
   placeholder?: React.ReactNode;
   // the error to show if the embed fails
   error?: React.ReactNode;
+  // classes to apply to the embed
+  className?: string;
 }
 
 export const Embed = (props: EmbedProps) => {
-  const { url, maxwidth, maxheight, placeholder, error } = props;
+  const { url, maxwidth, maxheight, placeholder, error, className } = props;
   const [loading, setLoading] = useState(true);
   const [oembedHtml, setOEmbedHtml] = useState<string>("");
   const { addScripts, providerService } = useContext(EmbedContext);
@@ -64,5 +66,10 @@ export const Embed = (props: EmbedProps) => {
     return <>{error}</>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: oembedHtml }} />;
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: oembedHtml }}
+      className={className}
+    />
+  );
 };

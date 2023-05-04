@@ -59,5 +59,7 @@ export interface CardboardProps {
   placeholder?: React.ReactNode;
   // the error to show if the embed fails
   error?: React.ReactNode;
+  // classes to apply to the embed
+  className?: string;
 }
 ```
