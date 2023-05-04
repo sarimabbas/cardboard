@@ -20,6 +20,7 @@
   "dependencies": {
     "@sarim.garden/cardboard": "workspace:^",
     "next": "13.3.4",
+    "nextjs-cors": "^2.1.2",
     "normalize-url": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
