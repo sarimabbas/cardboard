@@ -17,7 +17,7 @@ importers:
   packages/example:
     dependencies:
       '@sarim.garden/cardboard':
-        specifier: workspace:^
+        specifier: ^1.0.4
         version: link:../publish
       '@types/node':
         specifier: 18.16.3
