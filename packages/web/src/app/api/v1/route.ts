@@ -21,12 +21,12 @@ export async function POST(request: NextRequest) {
   const providersJson: OEmbedProvider[] = await providers.json();
 
   // find the provider that matches the url
+  const normalizedUrl = new URL(
+    normalizeUrl(url, {
+      stripWWW: true,
+    })
+  ).hostname;
   const provider = providersJson.find((provider) => {
-    const normalizedUrl = new URL(
-      normalizeUrl(url, {
-        stripWWW: true,
-      })
-    ).hostname;
     const normalizedProviderUrl = new URL(
       normalizeUrl(provider.provider_url, {
         stripWWW: true,
