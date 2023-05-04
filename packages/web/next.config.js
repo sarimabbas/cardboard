@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  transpilePackages: ["@sarim.garden/emerald-shared"],
+  transpilePackages: ["@emerald/shared"],
 };
 
 module.exports = nextConfig;
