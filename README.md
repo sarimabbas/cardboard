@@ -45,6 +45,8 @@ export interface EmbedProps {
   maxheight?: string;
   // the placeholder to show while loading
   placeholder?: React.ReactNode;
+  // the error to show if the embed fails to load
+  error?: React.ReactNode;
   // the link to the server e.g. `https://cardboard-web.vercel.app/api/v1`
   providerService?: string;
 }
