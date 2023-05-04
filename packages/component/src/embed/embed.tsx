@@ -7,11 +7,13 @@ export interface EmbedProps {
   maxwidth?: string;
   maxheight?: string;
   placeholder?: React.ReactNode;
+  error?: React.ReactNode;
   providerService?: string;
 }
 
 export const Embed = (props: EmbedProps) => {
-  const { url, maxwidth, maxheight, placeholder } = props;
+  const { url, maxwidth, maxheight, placeholder, error } = props;
+  const [loading, setLoading] = useState(true);
   const [oembedData, setOEmbedData] = useState<OEmbedResponse | null>(null);
 
   const provider =
@@ -24,6 +26,7 @@ export const Embed = (props: EmbedProps) => {
       maxwidth?: string,
       maxheight?: string
     ) => {
+      setLoading(true);
       const res = await fetch(provider, {
         method: "POST",
         headers: {
@@ -33,6 +36,7 @@ export const Embed = (props: EmbedProps) => {
       });
       const data = await res.json();
       setOEmbedData(data);
+      setLoading(false);
     },
     []
   );
@@ -42,8 +46,12 @@ export const Embed = (props: EmbedProps) => {
     getOEmbedData(provider, url, maxwidth, maxheight);
   }, [provider, url, maxwidth, maxheight]);
 
-  if (!oembedData?.html) {
+  if (loading) {
     return <>{placeholder}</>;
+  }
+
+  if (!oembedData?.html) {
+    return <>{error}</>;
   }
 
   return <InnerHTML html={oembedData.html} />;
