@@ -17,6 +17,16 @@ You can deploy your own service by cloning this repository and deploying `packag
 
 ## Component
 
+NPM link: <https://www.npmjs.com/package/@sarim.garden/cardboard>
+
+```
+npm install @sarim.garden/cardboard
+```
+
+You can also use `yarn` or `pnpm`.
+
+Use the component like so:
+
 ```jsx
 import { Cardboard } from "@sarim.garden/cardboard";
 
