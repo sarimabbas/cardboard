@@ -18,8 +18,13 @@ export const Embed = (props: EmbedProps) => {
     props.providerService ?? `https://cardboard-web.vercel.app/api/v1`;
 
   const getOEmbedData = useCallback(
-    async (url: string, maxwidth?: string, maxheight?: string) => {
-      const res = await fetch(`${provider}`, {
+    async (
+      provider: string,
+      url: string,
+      maxwidth?: string,
+      maxheight?: string
+    ) => {
+      const res = await fetch(provider, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,8 +39,8 @@ export const Embed = (props: EmbedProps) => {
 
   // fetch oembed
   useEffect(() => {
-    getOEmbedData(url, maxwidth, maxheight);
-  }, [url, maxwidth, maxheight]);
+    getOEmbedData(provider, url, maxwidth, maxheight);
+  }, [provider, url, maxwidth, maxheight]);
 
   if (!oembedData?.html) {
     return <>{placeholder}</>;
