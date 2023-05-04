@@ -18,7 +18,7 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@sarim.garden/cardboard": "workspace:*",
+    "@sarim.garden/cardboard": "^1.0.9",
     "next": "13.3.4",
     "normalize-url": "^8.0.0",
     "react": "18.2.0",
