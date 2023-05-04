@@ -1,6 +1,5 @@
-import InnerHTML from "dangerously-set-html-content";
-import { useCallback, useEffect, useState } from "react";
-import { OEmbedResponse } from "../types";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { EmbedContext } from "./provider";
 
 export interface EmbedProps {
   url: string;
@@ -14,45 +13,55 @@ export interface EmbedProps {
 export const Embed = (props: EmbedProps) => {
   const { url, maxwidth, maxheight, placeholder, error } = props;
   const [loading, setLoading] = useState(true);
-  const [oembedData, setOEmbedData] = useState<OEmbedResponse | null>(null);
+  const [oembedHtml, setOEmbedHtml] = useState<string>("");
+  const { addScripts } = useContext(EmbedContext);
 
   const provider =
     props.providerService ?? `https://cardboard-web.vercel.app/api/v1`;
 
-  const getOEmbedData = useCallback(
-    async (
-      provider: string,
-      url: string,
-      maxwidth?: string,
-      maxheight?: string
-    ) => {
-      setLoading(true);
-      const res = await fetch(provider, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url, maxheight, maxwidth }),
-      });
-      const data = await res.json();
-      setOEmbedData(data);
-      setLoading(false);
-    },
-    []
-  );
+  const getOEmbedData = useCallback(async () => {
+    if (!url) {
+      return;
+    }
 
-  // fetch oembed
+    setLoading(true);
+
+    // fetch the oembed data
+    const res = await fetch(provider, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url, maxheight, maxwidth }),
+    });
+    const data = await res.json();
+
+    // parse the html from the oembed response
+    const parser = new DOMParser();
+    const oembedDoc = parser.parseFromString(data.html, "text/html");
+
+    // get all the scripts
+    const scripts = oembedDoc.querySelectorAll("script");
+    addScripts(Array.from(scripts));
+
+    // set the html
+    // oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
+    setOEmbedHtml(oembedDoc.body.innerHTML);
+
+    setLoading(false);
+  }, [provider, url, maxheight, maxwidth, addScripts]);
+
   useEffect(() => {
-    getOEmbedData(provider, url, maxwidth, maxheight);
-  }, [provider, url, maxwidth, maxheight]);
+    getOEmbedData();
+  }, [getOEmbedData]);
 
   if (loading) {
     return <>{placeholder}</>;
   }
 
-  if (!oembedData?.html) {
+  if (!oembedHtml || oembedHtml === "") {
     return <>{error}</>;
   }
 
-  return <InnerHTML html={oembedData.html} />;
+  return <div dangerouslySetInnerHTML={{ __html: oembedHtml }} />;
 };

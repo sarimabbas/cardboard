@@ -1,1 +1,5 @@
-export { Embed as Cardboard, EmbedProps as CardboardProps } from "./embed";
+export {
+  Embed as Cardboard,
+  EmbedProps as CardboardProps,
+  EmbedProvider as CardboardProvider,
+} from "./embed";

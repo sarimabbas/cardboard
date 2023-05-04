@@ -1,6 +1,6 @@
 "use client";
 
-import { Cardboard } from "@sarim.garden/cardboard";
+import { Cardboard, CardboardProvider } from "@sarim.garden/cardboard";
 import { useState } from "react";
 
 export default function Home() {
@@ -14,7 +14,9 @@ export default function Home() {
         placeholder="Your URL here"
         onChange={(e) => setUrl(e.target.value)}
       />
-      {url && <Cardboard url={url} providerService="/api/v1" />}
+      <CardboardProvider>
+        <Cardboard url={url} providerService="/api/v1" />
+      </CardboardProvider>
     </div>
   );
 }
