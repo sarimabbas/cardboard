@@ -68,11 +68,3 @@ export async function POST(request: NextRequest) {
   // return the oembed data
   return NextResponse.json(json);
 }
-
-export const OPTIONS = async (request: NextRequest) => {
-  return new NextResponse(null, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-};
