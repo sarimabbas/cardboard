@@ -70,3 +70,8 @@ export async function POST(request: NextRequest) {
   // return the oembed data
   return NextResponse.json(json, { headers: commonHeaders });
 }
+
+// https://github.com/vercel/next.js/issues/48770
+export const GET = async (request: NextRequest) => {
+  return new Response();
+};
