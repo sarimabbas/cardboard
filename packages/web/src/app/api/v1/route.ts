@@ -1,21 +1,37 @@
 import { OEmbedProvider } from "@/types";
+import { NextResponse, NextRequest } from "next/server";
+import normalizeUrl from "normalize-url";
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const params = Object.fromEntries(url.searchParams);
+export async function POST(request: NextRequest) {
+  const { url, maxheight, maxwidth } = await request.json();
 
   // find the oembed provider
   const providers = await fetch("https://oembed.com/providers.json");
   const providersJson: OEmbedProvider[] = await providers.json();
 
   // find the provider that matches the url
-  const provider = providersJson.find((provider) =>
-    params.url.includes(provider.provider_url)
-  );
+  const provider = providersJson.find((provider) => {
+    const normalizedUrl = new URL(
+      normalizeUrl(url, {
+        stripWWW: true,
+      })
+    ).hostname;
+    const normalizedProviderUrl = new URL(
+      normalizeUrl(provider.provider_url, {
+        stripWWW: true,
+      })
+    ).hostname;
+    return normalizedProviderUrl === normalizedUrl;
+  });
 
   // if no provider is found, return a 404
   if (!provider) {
-    return new Response("Not found", { status: 404 });
+    return NextResponse.json(
+      {
+        error: "No provider found",
+      },
+      { status: 404 }
+    );
   }
 
   // find the endpoint that matches the url
@@ -23,16 +39,20 @@ export async function GET(request: Request) {
 
   // if no endpoint is found, return a 404
   if (!endpoint) {
-    return new Response("Not found", { status: 404 });
+    return NextResponse.json(
+      {
+        error: "No endpoint found",
+      },
+      { status: 404 }
+    );
   }
 
   // fetch the oembed data
-  const oembed = await fetch(
-    `${endpoint}?format=json&url=${params.url}&maxwidth=${params.maxwidth}&maxheight=${params.maxheight}`
+  const response = await fetch(
+    `${endpoint}?format=json&url=${url}&maxwidth=${maxwidth}&maxheight=${maxheight}`
   );
+  const json = await response.json();
 
   // return the oembed data
-  return new Response(await oembed.text(), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return NextResponse.json(json);
 }
