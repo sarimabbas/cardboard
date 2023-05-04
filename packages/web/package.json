@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@types/node": "18.16.3",
-    "@types/react": "18.2.2",
+    "@types/react": "18.2.4",
     "@types/react-dom": "18.2.3",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
@@ -18,11 +18,11 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
+    "@sarim.garden/cardboard": "workspace:*",
     "next": "13.3.4",
     "normalize-url": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.21.4",
-    "@sarim.garden/cardboard": "workspace:*"
+    "zod": "^3.21.4"
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Embed } from "@cardboard/shared";
+import { Cardboard } from "@sarim.garden/cardboard";
 import { useState } from "react";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
         placeholder="Your URL here"
         onChange={(e) => setUrl(e.target.value)}
       />
-      {url && <Embed url={url} />}
+      {url && <Cardboard url={url} />}
     </div>
   );
 }
