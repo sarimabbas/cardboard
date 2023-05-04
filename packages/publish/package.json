@@ -24,5 +24,8 @@
   },
   "dependencies": {
     "@cardboard/shared": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
