@@ -1,7 +1,7 @@
 {
   "name": "@sarim.garden/cardboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Embed anything from the web in your React app",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
