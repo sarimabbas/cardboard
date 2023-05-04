@@ -1,0 +1,19 @@
+{
+  "name": "@sarim.garden/cardboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup --config ./tsup.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@cardboard/shared": "workspace:*"
+  }
+}
