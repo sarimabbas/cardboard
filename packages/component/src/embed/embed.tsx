@@ -46,7 +46,7 @@ export const Embed = (props: EmbedProps) => {
     addScripts(Array.from(scripts));
 
     // set the html
-    // oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
+    oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
     setOEmbedHtml(oembedDoc.body.innerHTML);
 
     setLoading(false);
