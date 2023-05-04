@@ -30,7 +30,12 @@ export async function POST(request: NextRequest) {
       {
         error: "No provider found",
       },
-      { status: 404 }
+      {
+        status: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   }
 
@@ -43,7 +48,12 @@ export async function POST(request: NextRequest) {
       {
         error: "No endpoint found",
       },
-      { status: 404 }
+      {
+        status: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   }
 
@@ -62,7 +72,11 @@ export async function POST(request: NextRequest) {
   const json = await response.json();
 
   // return the oembed data
-  return NextResponse.json(json);
+  return NextResponse.json(json, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 }
 
 export const OPTIONS = async (request: NextRequest) => {
