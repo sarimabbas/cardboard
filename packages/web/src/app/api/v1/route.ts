@@ -1,6 +1,9 @@
 import { OEmbedProvider } from "@/types";
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import normalizeUrl from "normalize-url";
+
+const commonHeaders = new Headers();
+commonHeaders.set("Access-Control-Allow-Origin", "*");
 
 export async function POST(request: NextRequest) {
   const { url, maxheight, maxwidth } = await request.json();
@@ -30,7 +33,7 @@ export async function POST(request: NextRequest) {
       {
         error: "No provider found",
       },
-      { status: 404 }
+      { status: 404, headers: commonHeaders }
     );
   }
 
@@ -43,7 +46,7 @@ export async function POST(request: NextRequest) {
       {
         error: "No endpoint found",
       },
-      { status: 404 }
+      { status: 404, headers: commonHeaders }
     );
   }
 
@@ -54,5 +57,5 @@ export async function POST(request: NextRequest) {
   const json = await response.json();
 
   // return the oembed data
-  return NextResponse.json(json);
+  return NextResponse.json(json, { headers: commonHeaders });
 }
