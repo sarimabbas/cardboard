@@ -1,43 +1,22 @@
 import { OEmbedProvider } from "@/types";
+import { JSDOM } from "jsdom";
 import { NextApiRequest, NextApiResponse } from "next";
-import normalizeUrl from "normalize-url";
 import cors from "nextjs-cors";
+import normalizeUrl from "normalize-url";
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
   const { url, maxheight, maxwidth } = await req.body;
 
-  // find the oembed provider
-  const providers = await fetch("https://oembed.com/providers.json");
-  const providersJson: OEmbedProvider[] = await providers.json();
-
-  // find the provider that matches the url
-  const normalizedUrl = new URL(
-    normalizeUrl(url, {
-      stripWWW: true,
-    })
-  ).hostname;
-  const provider = providersJson.find((provider) => {
-    const normalizedProviderUrl = new URL(
-      normalizeUrl(provider.provider_url, {
-        stripWWW: true,
-      })
-    ).hostname;
-    return normalizedProviderUrl === normalizedUrl;
-  });
-
-  // if no provider is found, return a 404
-  if (!provider) {
-    return res.status(404).json({
-      error: "No provider found",
-    });
+  // get endpoint
+  let endpoint: string | undefined = undefined;
+  endpoint = await getEndpointFromProviderList(url);
+  if (!endpoint) {
+    endpoint = await getEndpointFromDiscovery(url);
   }
 
-  // find the endpoint that matches the url
-  const endpoint = provider.endpoints?.[0]?.url;
-
-  // if no endpoint is found, return a 404
+  // if no endpoint, return 404
   if (!endpoint) {
     return res.status(404).json({
       error: "No endpoint found",
@@ -63,3 +42,71 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default handler;
+
+const getEndpointFromProviderList = async (
+  url: string
+): Promise<string | undefined> => {
+  // find the oembed provider
+  const providers = await fetch("https://oembed.com/providers.json");
+  const providersJson: OEmbedProvider[] = await providers.json();
+
+  // find the provider that matches the url
+  const normalizedUrl = new URL(
+    normalizeUrl(url, {
+      stripWWW: true,
+    })
+  ).hostname;
+
+  const provider = providersJson.find((provider) => {
+    const normalizedProviderUrl = new URL(
+      normalizeUrl(provider.provider_url, {
+        stripWWW: true,
+      })
+    ).hostname;
+    return normalizedProviderUrl === normalizedUrl;
+  });
+
+  // find the endpoint that matches the url
+  return provider?.endpoints?.[0]?.url;
+};
+
+const getEndpointFromDiscovery = async (
+  url: string
+): Promise<string | undefined> => {
+  const response = await fetch(url);
+  const endpointFromDOM = await getEndpointFromDOM(response);
+  const endpointFromHeaders = await getEndpointFromHeaders(response);
+  return endpointFromDOM ?? endpointFromHeaders;
+};
+
+export const getEndpointFromDOM = async (
+  response: Response
+): Promise<string | undefined> => {
+  const html = await response.text();
+
+  const dom = new JSDOM(html);
+  const link = dom.window.document.querySelector(
+    "link[rel='alternate'][type='application/json+oembed']"
+  );
+  if (link) {
+    return link.getAttribute("href") ?? undefined;
+  }
+};
+
+export const getEndpointFromHeaders = async (
+  response: Response
+): Promise<string | undefined> => {
+  const header = response.headers.get("link");
+  console.log({ header });
+  if (header) {
+    const links = header.split(",");
+    const link = links.find((link) => {
+      const parts = link.split(";");
+      const type = parts[1].trim();
+      return type === "type=application/json+oembed";
+    });
+    if (link) {
+      return link.split(";")[0].trim();
+    }
+  }
+};

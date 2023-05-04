@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.1",
     "@types/node": "18.16.3",
     "@types/react": "18.2.4",
     "@types/react-dom": "18.2.3",
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "@sarim.garden/cardboard": "workspace:^",
+    "jsdom": "^22.0.0",
     "next": "13.3.4",
     "nextjs-cors": "^2.1.2",
     "normalize-url": "^8.0.0",

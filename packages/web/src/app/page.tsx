@@ -14,7 +14,7 @@ export default function Home() {
         placeholder="Your URL here"
         onChange={(e) => setUrl(e.target.value)}
       />
-      {url && <Cardboard url={url} />}
+      {url && <Cardboard url={url} providerService="/api/v1" />}
     </div>
   );
 }
