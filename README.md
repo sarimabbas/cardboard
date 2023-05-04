@@ -13,6 +13,8 @@ Optional properties:
 
 Full request and response details can be found on the [OEmbed spec](https://oembed.com/).
 
+You can deploy your own service by cloning this repository and deploying `packages/web`. Vercel is recommended.
+
 ## Component
 
 ```jsx
