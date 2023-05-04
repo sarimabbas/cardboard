@@ -32,9 +32,6 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 404,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
       }
     );
   }
@@ -50,9 +47,6 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 404,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
       }
     );
   }
@@ -72,18 +66,13 @@ export async function POST(request: NextRequest) {
   const json = await response.json();
 
   // return the oembed data
-  return NextResponse.json(json, {
+  return NextResponse.json(json);
+}
+
+export const OPTIONS = async (request: NextRequest) => {
+  return new NextResponse(null, {
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
   });
-}
-
-export const OPTIONS = async (request: NextRequest) => {
-  return new Response();
-};
-
-// https://github.com/vercel/next.js/issues/48770
-export const GET = async (request: NextRequest) => {
-  return new Response();
 };
