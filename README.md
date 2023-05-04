@@ -33,4 +33,19 @@ import { Cardboard } from "@sarim.garden/cardboard";
 <Cardboard url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />;
 ```
 
-You must set `process.env.EMBED_PROVIDER` to the URL of the service, otherwise the component will not work.
+Here are the props:
+
+```tsx
+export interface EmbedProps {
+  // the url to embed
+  url: string;
+  // the maximum width of the embed
+  maxwidth?: string;
+  // the maximum height of the embed
+  maxheight?: string;
+  // the placeholder to show while loading
+  placeholder?: React.ReactNode;
+  // the link to the server e.g. `https://cardboard-web.vercel.app/api/v1`
+  providerService?: string;
+}
+```
