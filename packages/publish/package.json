@@ -1,6 +1,6 @@
 {
   "name": "@sarim.garden/cardboard",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Embed anything from the web in your React app",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -21,9 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "tsup": "^6.7.0",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
+    "typescript": "^5.0.4",
     "@cardboard/shared": "workspace:*"
   },
   "publishConfig": {
