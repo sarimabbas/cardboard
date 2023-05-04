@@ -1,6 +1,6 @@
 "use client";
 
-import { Embed } from "@emerald/shared";
+import { Embed } from "@cardboard/shared";
 import { useState } from "react";
 
 export default function Home() {

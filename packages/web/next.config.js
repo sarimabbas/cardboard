@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  transpilePackages: ["@emerald/shared"],
+  transpilePackages: ["@cardboard/shared"],
 };
 
 module.exports = nextConfig;
