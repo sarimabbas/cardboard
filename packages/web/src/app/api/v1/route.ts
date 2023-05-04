@@ -2,6 +2,17 @@ import { OEmbedProvider } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import normalizeUrl from "normalize-url";
 
+export async function GET(request: Request) {
+  return new Response("Hello!", {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
   const { url, maxheight, maxwidth } = await request.json();
 
@@ -32,6 +43,11 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
       }
     );
   }
@@ -47,6 +63,11 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
       }
     );
   }
@@ -66,5 +87,11 @@ export async function POST(request: NextRequest) {
   const json = await response.json();
 
   // return the oembed data
-  return NextResponse.json(json);
+  return NextResponse.json(json, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
 }
