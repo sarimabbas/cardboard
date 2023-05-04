@@ -14,7 +14,7 @@ importers:
         specifier: latest
         version: 1.9.3
 
-  packages/dist:
+  packages/publish:
     dependencies:
       '@cardboard/shared':
         specifier: workspace:*
