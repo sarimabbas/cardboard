@@ -50,10 +50,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const fetchThisURL = new URL(endpoint);
+  fetchThisURL.searchParams.set("format", "json");
+  fetchThisURL.searchParams.set("url", url);
+  if (maxwidth) {
+    fetchThisURL.searchParams.set("maxwidth", maxwidth);
+  }
+  if (maxheight) {
+    fetchThisURL.searchParams.set("maxheight", maxheight);
+  }
+
   // fetch the oembed data
-  const response = await fetch(
-    `${endpoint}?format=json&url=${url}&maxwidth=${maxwidth}&maxheight=${maxheight}`
-  );
+  const response = await fetch(fetchThisURL);
   const json = await response.json();
 
   // return the oembed data

@@ -1,3 +1,4 @@
+import InnerHTML from "dangerously-set-html-content";
 import { useCallback, useEffect, useState } from "react";
 import { OEmbedResponse } from "../types";
 
@@ -7,10 +8,11 @@ interface EmbedProps {
   url: string;
   maxwidth?: string;
   maxheight?: string;
+  placeholder?: React.ReactNode;
 }
 
 export const Embed = (props: EmbedProps) => {
-  const { url, maxwidth, maxheight } = props;
+  const { url, maxwidth, maxheight, placeholder } = props;
   const [oembedData, setOEmbedData] = useState<OEmbedResponse | null>(null);
 
   const getOEmbedData = useCallback(
@@ -33,9 +35,9 @@ export const Embed = (props: EmbedProps) => {
     getOEmbedData(url, maxwidth, maxheight);
   }, [url, maxwidth, maxheight]);
 
-  if (!oembedData) {
-    return null;
+  if (!oembedData?.html) {
+    return <>{placeholder}</>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: oembedData.html }} />;
+  return <InnerHTML html={oembedData.html} />;
 };
