@@ -42,7 +42,7 @@ importers:
   packages/web:
     dependencies:
       '@sarim.garden/cardboard':
-        specifier: ^1.0.9
+        specifier: workspace:^
         version: link:../component
       next:
         specifier: 13.3.4
