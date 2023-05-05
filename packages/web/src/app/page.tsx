@@ -1,6 +1,6 @@
 "use client";
 
-import { Cardboard, CardboardProvider } from "@sarim.garden/cardboard";
+import { Cardboard, CardboardBox } from "@sarim.garden/cardboard";
 import { useState } from "react";
 
 export default function Home() {
@@ -28,9 +28,13 @@ export default function Home() {
           Add
         </button>
       </div>
-      <CardboardProvider />
+      <CardboardBox />
       {urls.map((url, idx) => (
-        <Cardboard url={url} key={`${idx}=${url}`} />
+        <Cardboard
+          url={url}
+          key={`${idx}=${url}`}
+          className="!rounded-lg !overflow-hidden w-fit"
+        />
       ))}
     </div>
   );

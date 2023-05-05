@@ -16,7 +16,7 @@ export interface EmbedProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
-  // the provider to use
+  // the provider to use e.g. https://cardboard-web.vercel.app/api/v1
   providerService?: string;
 }
 
@@ -84,8 +84,8 @@ export const Embed = (props: EmbedProps) => {
 
   return (
     <div ref={ref} className={className}>
-      {loading && placeholder}
-      {!ref.current?.innerHTML && error}
+      {loading ? placeholder : null}
+      {ref.current?.innerHTML ? null : error}
     </div>
   );
 };
