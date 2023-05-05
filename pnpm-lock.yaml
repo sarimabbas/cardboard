@@ -16,9 +16,6 @@ importers:
 
   packages/component:
     dependencies:
-      dangerously-set-html-content:
-        specifier: ^1.0.13
-        version: 1.0.13(react@18.2.0)
       jotai:
         specifier: ^2.0.4
         version: 2.0.4(react@18.2.0)
@@ -31,9 +28,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-script-hook:
-        specifier: ^1.7.2
-        version: 1.7.2(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@types/react':
         specifier: ^18.2.4
@@ -851,15 +845,6 @@ packages:
   /csstype@3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
-
-  /dangerously-set-html-content@1.0.13(react@18.2.0):
-    resolution: {integrity: sha512-C/6Rm8L3BgjFX0ugETpWS3MyrRqTycVbqlSKDhqeoMaZAfCw2Xx1qcj4CYGnZnn61tCJ3JZdHnWCcNEXvhh4sA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^18.2.0
-    dependencies:
-      react: 18.2.0
-    dev: false
 
   /data-urls@4.0.0:
     resolution: {integrity: sha512-/mMTei/JXPqvFqQtfyTowxmJVwr2PVAeCcDxyFf6LhoOu/09TX2OX3kb2wzi4DMXcfj4OItwDOnhl5oziPnT6g==}
@@ -1904,16 +1889,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
-
-  /react-script-hook@1.7.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-fhyCEfXb94fag34UPRF0zry1XGwmVY+79iibWwTqAoOiCzYJQOYTiWJ7CnqglA9tMSV8g45cQpHCMcBwr7dwhA==}
-    peerDependencies:
-      react: ^16.8.6 || 17 - 18
-      react-dom: ^16.8.6 || 17 - 18
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react@18.2.0:
