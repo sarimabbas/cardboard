@@ -29,13 +29,17 @@ export default function Home() {
         </button>
       </div>
       <CardboardBox />
-      {urls.map((url, idx) => (
-        <Cardboard
-          url={url}
-          key={`${idx}=${url}`}
-          className="!rounded-lg !overflow-hidden w-fit"
-        />
-      ))}
+      <div className="grid md:grid-cols-3 gap-8">
+        {urls.map((url, idx) => (
+          <Cardboard
+            url={url}
+            key={`${idx}=${url}`}
+            providerService="/api/v1"
+            responsive
+            className="h-[600px]"
+          />
+        ))}
+      </div>
     </div>
   );
 }

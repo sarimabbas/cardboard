@@ -18,6 +18,8 @@ export interface EmbedProps {
   className?: string;
   // the provider to use e.g. https://cardboard-web.vercel.app/api/v1
   providerService?: string;
+  // attempt to make the embed responsive
+  responsive?: boolean;
 }
 
 export const Embed = (props: EmbedProps) => {
@@ -29,6 +31,7 @@ export const Embed = (props: EmbedProps) => {
     error,
     className,
     providerService = "https://cardboard-web.vercel.app/api/v1",
+    responsive,
   } = props;
   const [loading, setLoading] = useState(true);
   const setScripts = useSetAtom(EmbedProviderScriptsAtom);

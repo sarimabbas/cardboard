@@ -44,9 +44,8 @@ export const EmbedProvider = () => {
     }
 
     scripts.forEach((script) => {
-      const scriptTag = document.createElement("script");
-
       // create script tag
+      const scriptTag = document.createElement("script");
       if (script.src) {
         scriptTag.src = script.src;
         scriptTag.async = true;
@@ -55,19 +54,27 @@ export const EmbedProvider = () => {
         scriptTag.innerHTML = script.text;
       }
 
-      // check existing
+      // if no existing script, just append to DOM to run it
       const existingScript = existingScriptOnElement(ref.current!, script);
-      if (existingScript) {
-        existingScript.remove();
-        if (script.src) {
-          scriptTag.src = scriptTag.src + "?cachebuster=" + Date.now();
-        } else {
-          scriptTag.innerHTML =
-            scriptTag.innerHTML + "/* cachebuster=" + Date.now() + " */";
-        }
+      if (!existingScript) {
+        ref.current?.appendChild(scriptTag);
+        return;
       }
 
-      // append script tag
+      // run existing script based on rule
+      const didRun = runExistingRule(existingScript);
+      if (didRun) {
+        return;
+      }
+
+      // replace existing script with cachebusted version to force reload
+      existingScript.remove();
+      if (script.src) {
+        scriptTag.src = scriptTag.src + "?cachebuster=" + Date.now();
+      } else {
+        scriptTag.innerHTML =
+          scriptTag.innerHTML + "/* cachebuster=" + Date.now() + " */";
+      }
       ref.current?.appendChild(scriptTag);
     });
   }, [scripts]);
@@ -77,4 +84,14 @@ export const EmbedProvider = () => {
   }, [runScripts]);
 
   return <div ref={ref} />;
+};
+
+const runExistingRule = (script: HTMLScriptElement): boolean => {
+  if (script.src.includes("platform.twitter.com/widgets.js")) {
+    // re-run twitter widgets.js
+    (window as any).twttr.widgets.load();
+    return true;
+  }
+
+  return false;
 };
