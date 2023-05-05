@@ -1,20 +1,6 @@
+import { atom, useAtomValue } from "jotai";
 import normalizeUrl from "normalize-url";
-import { createContext, useCallback } from "react";
-
-export interface IEmbedContext {
-  // add scripts to the page
-  addScripts: (scripts: HTMLScriptElement[]) => void;
-  // remove scripts from the page
-  removeScripts: (scripts: HTMLScriptElement[]) => void;
-  // the service to use for oembed
-  providerService: string;
-}
-
-export const EmbedContext = createContext<IEmbedContext>({
-  addScripts: () => {},
-  removeScripts: () => {},
-  providerService: "",
-});
+import { useCallback, useEffect, useRef } from "react";
 
 const scriptSrcWithoutCacheBuster = (src: string) => {
   if (!src) {
@@ -26,67 +12,69 @@ const scriptSrcWithoutCacheBuster = (src: string) => {
   });
 };
 
-interface IUseCreateEmbedContextProps {
-  // the service to use for oembed
-  providerService?: string;
-}
+export const EmbedProviderScriptsAtom = atom<HTMLScriptElement[]>([]);
 
-// this hook is used to create the context
-const useCreateEmbedContext = (
-  props: IUseCreateEmbedContextProps
-): IEmbedContext => {
-  const { providerService } = props;
-
-  // implementation of addScripts
-  const addScripts = useCallback((inputs: HTMLScriptElement[]) => {
-    const existingScripts = Array.from(
-      document.body.querySelectorAll("script")
-    );
-    inputs.forEach((input) => {
-      const existingScript = existingScripts.find((s) => s.isEqualNode(input));
-      if (existingScript) {
-        existingScript.remove();
-        setTimeout(() => {
-          document.body.appendChild(input);
-        }, 80);
-      } else {
-        document.body.appendChild(input);
-      }
-    });
-  }, []);
-
-  // implementation of removeScripts
-  const removeScripts = useCallback((inputs: HTMLScriptElement[]) => {
-    const existingScripts = Array.from(
-      document.body.querySelectorAll("script")
-    );
-    inputs.forEach((input) => {
-      const existingScript = existingScripts.find((s) => s.isEqualNode(input));
-      if (existingScript) {
-        existingScript.remove();
-      }
-    });
-  }, []);
-
-  return {
-    addScripts,
-    removeScripts,
-    providerService:
-      providerService ?? "https://cardboard-web.vercel.app/api/v1",
-  };
+const existingScriptOnElement = (
+  element: HTMLDivElement,
+  script: HTMLScriptElement
+) => {
+  const scripts = element.querySelectorAll("script");
+  for (const existingScript of scripts) {
+    if (
+      existingScript.src &&
+      scriptSrcWithoutCacheBuster(existingScript.src) ===
+        scriptSrcWithoutCacheBuster(script.src)
+    ) {
+      return existingScript;
+    }
+    if (existingScript.innerHTML === script.innerHTML) {
+      return existingScript;
+    }
+  }
+  return undefined;
 };
 
-interface IEmbedProviderProps {
-  // the children to render
-  children: React.ReactNode;
-  // the service to use for oembed
-  // e.g. https://cardboard-web.vercel.app/api/v1
-  providerService?: string;
-}
+export const EmbedProvider = () => {
+  const scripts = useAtomValue(EmbedProviderScriptsAtom);
+  const ref = useRef<HTMLDivElement>(null);
 
-export const EmbedProvider = (props: IEmbedProviderProps) => {
-  const { providerService, children } = props;
-  const ctx = useCreateEmbedContext({ providerService });
+  const runScripts = useCallback(async () => {
+    if (!ref.current) {
+      return;
+    }
 
-  return <EmbedContext.Provider value={ctx}>{children}</EmbedContext.Provider>;
+    scripts.forEach((script) => {
+      const scriptTag = document.createElement("script");
+
+      // create script tag
+      if (script.src) {
+        scriptTag.src = script.src;
+        scriptTag.async = true;
+        scriptTag.defer = true;
+      } else {
+        scriptTag.innerHTML = script.text;
+      }
+
+      // check existing
+      const existingScript = existingScriptOnElement(ref.current!, script);
+      if (existingScript) {
+        existingScript.remove();
+        if (script.src) {
+          scriptTag.src = scriptTag.src + "?cachebuster=" + Date.now();
+        } else {
+          scriptTag.innerHTML =
+            scriptTag.innerHTML + "/* cachebuster=" + Date.now() + " */";
+        }
+      }
+
+      // append script tag
+      ref.current?.appendChild(scriptTag);
+    });
+  }, [scripts]);
+
+  useEffect(() => {
+    runScripts();
+  }, [runScripts]);
+
+  return <div ref={ref} />;
 };

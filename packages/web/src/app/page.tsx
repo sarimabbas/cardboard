@@ -28,11 +28,10 @@ export default function Home() {
           Add
         </button>
       </div>
-      <CardboardProvider>
-        {urls.map((url) => (
-          <Cardboard url={url} />
-        ))}
-      </CardboardProvider>
+      <CardboardProvider />
+      {urls.map((url, idx) => (
+        <Cardboard url={url} key={`${idx}=${url}`} />
+      ))}
     </div>
   );
 }

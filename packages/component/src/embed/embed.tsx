@@ -1,5 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { EmbedContext } from "./provider";
+import { useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
+import { EmbedProviderScriptsAtom } from "./provider";
 
 export interface EmbedProps {
   // the url to embed
@@ -14,14 +15,23 @@ export interface EmbedProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
+  // the provider to use
+  providerService?: string;
 }
 
 export const Embed = (props: EmbedProps) => {
-  const { url, maxwidth, maxheight, placeholder, error, className } = props;
+  const {
+    url,
+    maxwidth,
+    maxheight,
+    placeholder,
+    error,
+    className,
+    providerService = "https://cardboard-web.vercel.app/api/v1",
+  } = props;
   const [loading, setLoading] = useState(true);
   const [oembedHtml, setOEmbedHtml] = useState<string>("");
-  const { providerService } = useContext(EmbedContext);
-  const { addScripts } = useContext(EmbedContext);
+  const setScripts = useSetAtom(EmbedProviderScriptsAtom);
 
   const getOEmbedData = useCallback(async () => {
     if (!url || !providerService) {
@@ -44,16 +54,26 @@ export const Embed = (props: EmbedProps) => {
     const parser = new DOMParser();
     const oembedDoc = parser.parseFromString(data.html, "text/html");
 
-    // get all the scripts
-    const scripts = oembedDoc.querySelectorAll("script");
-    addScripts(Array.from(scripts));
+    // set scripts
+    const scripts: NodeListOf<HTMLScriptElement> =
+      oembedDoc.querySelectorAll("script");
+    setScripts((prev) => [
+      ...prev,
+      ...Array.from(scripts).filter((s) => !prev.some((p) => p.isEqualNode(s))),
+    ]);
 
     // set the html
     oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
     setOEmbedHtml(oembedDoc.body.innerHTML);
 
+    // get all the scripts
+    setScripts((prev) => [
+      ...prev,
+      ...Array.from(scripts).filter((s) => !prev.some((p) => p.isEqualNode(s))),
+    ]);
+
     setLoading(false);
-  }, [providerService, url, maxheight, maxwidth]);
+  }, [providerService, url, maxheight, maxwidth, setScripts]);
 
   useEffect(() => {
     getOEmbedData();
