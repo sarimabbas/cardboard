@@ -1,6 +1,7 @@
 import { useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { EmbedProviderScriptsAtom } from "./provider";
+import { useRef } from "react";
 
 export interface EmbedProps {
   // the url to embed
@@ -30,11 +31,13 @@ export const Embed = (props: EmbedProps) => {
     providerService = "https://cardboard-web.vercel.app/api/v1",
   } = props;
   const [loading, setLoading] = useState(true);
-  const [oembedHtml, setOEmbedHtml] = useState<string>("");
   const setScripts = useSetAtom(EmbedProviderScriptsAtom);
 
+  // use ref instead of state to avoid fallback to pre-embed html
+  const ref = useRef<HTMLDivElement>(null);
+
   const getOEmbedData = useCallback(async () => {
-    if (!url || !providerService) {
+    if (!url || !providerService || !ref.current) {
       return;
     }
 
@@ -64,7 +67,7 @@ export const Embed = (props: EmbedProps) => {
 
     // set the html
     oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
-    setOEmbedHtml(oembedDoc.body.innerHTML);
+    ref.current.innerHTML = oembedDoc.body.innerHTML;
 
     // get all the scripts
     setScripts((prev) => [
@@ -73,24 +76,16 @@ export const Embed = (props: EmbedProps) => {
     ]);
 
     setLoading(false);
-  }, [providerService, url, maxheight, maxwidth, setScripts]);
+  }, [providerService, url, maxheight, maxwidth, setScripts, ref]);
 
   useEffect(() => {
     getOEmbedData();
   }, [getOEmbedData]);
 
-  if (loading) {
-    return <>{placeholder}</>;
-  }
-
-  if (!oembedHtml || oembedHtml === "") {
-    return <>{error}</>;
-  }
-
   return (
-    <div
-      dangerouslySetInnerHTML={{ __html: oembedHtml }}
-      className={className}
-    />
+    <div ref={ref} className={className}>
+      {loading && placeholder}
+      {!ref.current?.innerHTML && error}
+    </div>
   );
 };
