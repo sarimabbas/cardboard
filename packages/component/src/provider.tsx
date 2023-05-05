@@ -89,7 +89,9 @@ export const EmbedProvider = () => {
 const runExistingRule = (script: HTMLScriptElement): boolean => {
   if (script.src.includes("platform.twitter.com/widgets.js")) {
     // re-run twitter widgets.js
-    (window as any).twttr.widgets.load();
+    if ((window as any)?.twttr?.widgets) {
+      (window as any).twttr.widgets.load();
+    }
     return true;
   }
 
