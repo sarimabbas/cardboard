@@ -1,9 +1,7 @@
-import InnerHTML from "dangerously-set-html-content";
-import { createContext, useCallback, useState } from "react";
+import normalizeUrl from "normalize-url";
+import { createContext, useCallback } from "react";
 
 export interface IEmbedContext {
-  // a deduped list of scripts to add to the page
-  scripts: HTMLScriptElement[];
   // add scripts to the page
   addScripts: (scripts: HTMLScriptElement[]) => void;
   // remove scripts from the page
@@ -13,11 +11,20 @@ export interface IEmbedContext {
 }
 
 export const EmbedContext = createContext<IEmbedContext>({
-  scripts: [],
   addScripts: () => {},
   removeScripts: () => {},
   providerService: "",
 });
+
+const scriptSrcWithoutCacheBuster = (src: string) => {
+  if (!src) {
+    return src;
+  }
+  return normalizeUrl(src, {
+    removeQueryParameters: ["cachebuster"],
+    sortQueryParameters: true,
+  });
+};
 
 interface IUseCreateEmbedContextProps {
   // the service to use for oembed
@@ -29,33 +36,39 @@ const useCreateEmbedContext = (
   props: IUseCreateEmbedContextProps
 ): IEmbedContext => {
   const { providerService } = props;
-  const [scripts, setScripts] = useState<HTMLScriptElement[]>([]);
 
   // implementation of addScripts
   const addScripts = useCallback((inputs: HTMLScriptElement[]) => {
-    const toAdd = inputs.filter((input) => {
-      const existsOnPage = window.document.querySelector(
-        `script[src="${input.src}"]`
-      );
-      const existsInState = scripts.find((state) => state.src === input.src);
-      console.log({ existsInState, existsOnPage });
-      return !(existsOnPage || existsInState);
+    const existingScripts = Array.from(
+      document.body.querySelectorAll("script")
+    );
+    inputs.forEach((input) => {
+      const existingScript = existingScripts.find((s) => s.isEqualNode(input));
+      if (existingScript) {
+        existingScript.remove();
+        setTimeout(() => {
+          document.body.appendChild(input);
+        }, 80);
+      } else {
+        document.body.appendChild(input);
+      }
     });
-    console.log({ "settinf scripts": toAdd, inputs: inputs });
-    setScripts((prev) => [...prev, ...toAdd]);
   }, []);
 
   // implementation of removeScripts
   const removeScripts = useCallback((inputs: HTMLScriptElement[]) => {
-    setScripts((prev) =>
-      prev.filter((s) => {
-        return !inputs.find((i) => i.src === s.src);
-      })
+    const existingScripts = Array.from(
+      document.body.querySelectorAll("script")
     );
+    inputs.forEach((input) => {
+      const existingScript = existingScripts.find((s) => s.isEqualNode(input));
+      if (existingScript) {
+        existingScript.remove();
+      }
+    });
   }, []);
 
   return {
-    scripts,
     addScripts,
     removeScripts,
     providerService:
@@ -74,12 +87,6 @@ interface IEmbedProviderProps {
 export const EmbedProvider = (props: IEmbedProviderProps) => {
   const { providerService, children } = props;
   const ctx = useCreateEmbedContext({ providerService });
-  const scripts = `<div>${ctx.scripts.map((s) => s.outerHTML).join("")}</div>`;
 
-  return (
-    <EmbedContext.Provider value={ctx}>
-      {children}
-      <InnerHTML html={scripts} key={ctx.scripts.map((s) => s.src).join(",")} />
-    </EmbedContext.Provider>
-  );
+  return <EmbedContext.Provider value={ctx}>{children}</EmbedContext.Provider>;
 };

@@ -9,23 +9,25 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-center gap-8">
-      <input
-        type="url"
-        className="p-4 border rounded-md"
-        placeholder="Your URL here"
-        onChange={(e) => setUrl(e.target.value)}
-      />
-      <button
-        className="p-4 border rounded-md"
-        onClick={() => {
-          if (url === "") {
-            return;
-          }
-          setUrls([...urls, url]);
-        }}
-      >
-        Add
-      </button>
+      <div className="flex items-center gap-4">
+        <input
+          type="url"
+          className="p-4 border rounded-md flex-1"
+          placeholder="Your URL here"
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <button
+          className="p-4 border rounded-md"
+          onClick={() => {
+            if (url === "") {
+              return;
+            }
+            setUrls([...urls, url]);
+          }}
+        >
+          Add
+        </button>
+      </div>
       <CardboardProvider>
         {urls.map((url) => (
           <Cardboard url={url} />

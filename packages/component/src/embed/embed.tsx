@@ -20,7 +20,8 @@ export const Embed = (props: EmbedProps) => {
   const { url, maxwidth, maxheight, placeholder, error, className } = props;
   const [loading, setLoading] = useState(true);
   const [oembedHtml, setOEmbedHtml] = useState<string>("");
-  const { addScripts, providerService } = useContext(EmbedContext);
+  const { providerService } = useContext(EmbedContext);
+  const { addScripts } = useContext(EmbedContext);
 
   const getOEmbedData = useCallback(async () => {
     if (!url || !providerService) {
@@ -52,7 +53,7 @@ export const Embed = (props: EmbedProps) => {
     setOEmbedHtml(oembedDoc.body.innerHTML);
 
     setLoading(false);
-  }, [providerService, url, maxheight, maxwidth, addScripts]);
+  }, [providerService, url, maxheight, maxwidth]);
 
   useEffect(() => {
     getOEmbedData();
