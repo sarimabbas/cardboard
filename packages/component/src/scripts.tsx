@@ -31,11 +31,12 @@ export const scriptSrcWithoutCacheBuster = (src: string) => {
 };
 
 export const runExistingRule = (script: HTMLScriptElement): boolean => {
-  if (script.src.includes("platform.twitter.com/widgets.js")) {
+  if (
+    script.src.includes("platform.twitter.com/widgets.js") &&
+    (window as any)?.twttr?.widgets
+  ) {
     // re-run twitter widgets.js
-    if ((window as any)?.twttr?.widgets) {
-      (window as any).twttr.widgets.load();
-    }
+    (window as any).twttr.widgets.load();
     return true;
   }
 
