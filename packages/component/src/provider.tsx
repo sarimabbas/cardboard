@@ -13,7 +13,7 @@ export const EmbedContext = createContext<IEmbedContext>({
   runScripts: () => {},
 });
 
-interface EmbedProviderProps {
+export interface EmbedProviderProps {
   providerService?: string;
   children: React.ReactNode;
 }
