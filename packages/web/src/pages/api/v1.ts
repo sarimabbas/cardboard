@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import cors from "nextjs-cors";
 import normalizeUrl from "normalize-url";
 
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await cors(req, res);
 
   const { url, maxheight, maxwidth } = await req.body;

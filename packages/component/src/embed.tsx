@@ -15,24 +15,18 @@ export interface EmbedProps {
   // classes to apply to the embed
   className?: string;
   // attempt to make the embed responsive
-  responsive?: boolean;
+  // forceFit?: boolean;
 }
 
 export const Embed = (props: EmbedProps) => {
-  const {
-    url,
-    maxwidth,
-    maxheight,
-    placeholder,
-    error,
-    className,
-    responsive,
-  } = props;
+  const { url, maxwidth, maxheight, placeholder, error, className, forceFit } =
+    props;
 
   const [loading, setLoading] = useState(true);
   const { runScripts, providerService } = useContext(EmbedContext);
 
   // use ref instead of state to avoid fallback to pre-embed html
+  const parentRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   const getOEmbedData = useCallback(async () => {
@@ -74,9 +68,10 @@ export const Embed = (props: EmbedProps) => {
   }, [getOEmbedData]);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={parentRef} className={className}>
       {loading ? placeholder : null}
       {ref.current?.innerHTML ? null : error}
+      <div ref={ref} />
     </div>
   );
 };

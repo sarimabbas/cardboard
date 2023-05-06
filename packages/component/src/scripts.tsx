@@ -39,3 +39,31 @@ export const runExistingRule = (script: HTMLScriptElement): boolean => {
 
   return false;
 };
+
+export const resetElement = (element: HTMLElement) => {
+  // reset margin
+  element.style.margin = "0";
+  // reset width
+  element.style.width = "100%";
+  element.style.maxWidth = "100%";
+  // reset height
+  element.style.maxHeight = "100%";
+  element.style.height = "100%";
+  // reset position to default
+  element.style.position = "static";
+};
+
+export const fitChildToParent = (
+  parent: React.RefObject<HTMLElement>,
+  child: React.RefObject<HTMLElement>
+) => {
+  const parentWidth = parent.current?.getBoundingClientRect()?.width;
+  const childWidth = child.current?.getBoundingClientRect()?.width;
+  if (!parentWidth || !childWidth) {
+    return;
+  }
+  const scale = parentWidth / childWidth;
+  console.log("fitting child to parent", scale, parentWidth, childWidth);
+  child.current.style.transformOrigin = "top left";
+  child.current.style.transform = `scale(${scale})`;
+};
