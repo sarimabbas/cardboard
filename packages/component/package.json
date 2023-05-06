@@ -32,7 +32,6 @@
     "access": "public"
   },
   "dependencies": {
-    "jotai": "^2.0.4",
     "normalize-url": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
