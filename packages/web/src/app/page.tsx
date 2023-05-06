@@ -1,6 +1,6 @@
 "use client";
 
-import { Cardboard } from "@sarim.garden/cardboard";
+import { Cardboard, CardboardProvider } from "@sarim.garden/cardboard";
 import { useState } from "react";
 
 export default function Home() {
@@ -28,9 +28,13 @@ export default function Home() {
           Add
         </button>
       </div>
-      {urls.map((url, idx) => (
-        <Cardboard url={url} key={`${idx}=${url}`} />
-      ))}
+      <CardboardProvider providerService="/api/v1">
+        <div className="flex flex-wrap gap-4">
+          {urls.map((url, idx) => (
+            <Cardboard url={url} key={`${idx}=${url}`} />
+          ))}
+        </div>
+      </CardboardProvider>
     </div>
   );
 }
