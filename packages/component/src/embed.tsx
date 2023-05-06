@@ -52,7 +52,6 @@ export const Embed = (props: EmbedProps) => {
     // set scripts
     const scripts: NodeListOf<HTMLScriptElement> =
       oembedDoc.querySelectorAll("script");
-    console.log("sending scripts to provider", scripts);
     runScripts(Array.from(scripts));
 
     // set the html

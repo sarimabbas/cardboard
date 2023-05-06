@@ -97,7 +97,6 @@ export const getEndpointFromHeaders = async (
   response: Response
 ): Promise<string | undefined> => {
   const header = response.headers.get("link");
-  console.log({ header });
   if (header) {
     const links = header.split(",");
     const link = links.find((link) => {

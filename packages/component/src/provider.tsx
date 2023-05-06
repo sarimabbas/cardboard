@@ -28,8 +28,6 @@ export const EmbedProvider = (props: EmbedProviderProps) => {
       }
 
       inputScripts.forEach((s) => {
-        console.log("running script", s);
-
         // create script tag
         const scriptTag = document.createElement("script");
         if (s.src) {
@@ -43,7 +41,6 @@ export const EmbedProvider = (props: EmbedProviderProps) => {
         // if no existing script, just append to DOM to run it
         const existingScript = existingScriptOnElement(ref.current!, s);
         if (!existingScript) {
-          console.log("no existing script, appending");
           ref.current?.appendChild(scriptTag);
           return;
         }
@@ -51,16 +48,11 @@ export const EmbedProvider = (props: EmbedProviderProps) => {
         // run existing script based on rule
         const didRun = runExistingRule(existingScript);
         if (didRun) {
-          console.log(
-            "existing script ran from rule, skipping: ",
-            existingScript
-          );
           return;
         }
 
         // replace existing script with cachebusted version to force reload
         existingScript.remove();
-        console.log("existing script removed: ", existingScript);
         if (s.src) {
           scriptTag.src = scriptTag.src + "?cachebuster=" + Date.now();
         } else {

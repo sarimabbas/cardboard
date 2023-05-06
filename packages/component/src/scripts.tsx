@@ -63,7 +63,6 @@ export const fitChildToParent = (
     return;
   }
   const scale = parentWidth / childWidth;
-  console.log("fitting child to parent", scale, parentWidth, childWidth);
   child.current.style.transformOrigin = "top left";
   child.current.style.transform = `scale(${scale})`;
 };
