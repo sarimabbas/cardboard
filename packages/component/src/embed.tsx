@@ -19,8 +19,7 @@ export interface EmbedProps {
 }
 
 export const Embed = (props: EmbedProps) => {
-  const { url, maxwidth, maxheight, placeholder, error, className, forceFit } =
-    props;
+  const { url, maxwidth, maxheight, placeholder, error, className } = props;
 
   const [loading, setLoading] = useState(true);
   const { runScripts, providerService } = useContext(EmbedContext);
