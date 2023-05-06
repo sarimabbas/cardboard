@@ -4,20 +4,17 @@ export const existingScriptOnElement = (
   element: HTMLDivElement,
   script: HTMLScriptElement
 ) => {
-  const scripts = element.querySelectorAll("script");
-  for (const existingScript of scripts) {
-    if (
-      existingScript.src &&
-      scriptSrcWithoutCacheBuster(existingScript.src) ===
+  const scripts = Array.from(element.querySelectorAll("script"));
+  return scripts.find((s) => {
+    if (script.src) {
+      return (
+        scriptSrcWithoutCacheBuster(s.src) ===
         scriptSrcWithoutCacheBuster(script.src)
-    ) {
-      return existingScript;
+      );
+    } else {
+      return s.innerHTML === script.innerHTML;
     }
-    if (existingScript.innerHTML === script.innerHTML) {
-      return existingScript;
-    }
-  }
-  return undefined;
+  });
 };
 
 export const scriptSrcWithoutCacheBuster = (src: string) => {

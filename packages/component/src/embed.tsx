@@ -1,7 +1,5 @@
-import { useSetAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
-import { EmbedProviderScriptsAtom } from "./provider";
-import { useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { EmbedContext } from "./provider";
 
 export interface EmbedProps {
   // the url to embed
@@ -33,8 +31,9 @@ export const Embed = (props: EmbedProps) => {
     providerService = "https://cardboard-web.vercel.app/api/v1",
     responsive,
   } = props;
+
   const [loading, setLoading] = useState(true);
-  const setScripts = useSetAtom(EmbedProviderScriptsAtom);
+  const { runScripts } = useContext(EmbedContext);
 
   // use ref instead of state to avoid fallback to pre-embed html
   const ref = useRef<HTMLDivElement>(null);
@@ -63,23 +62,15 @@ export const Embed = (props: EmbedProps) => {
     // set scripts
     const scripts: NodeListOf<HTMLScriptElement> =
       oembedDoc.querySelectorAll("script");
-    setScripts((prev) => [
-      ...prev,
-      ...Array.from(scripts).filter((s) => !prev.some((p) => p.isEqualNode(s))),
-    ]);
+    console.log("sending scripts to provider", scripts);
+    runScripts(Array.from(scripts));
 
     // set the html
     oembedDoc.querySelectorAll("script").forEach((script) => script.remove());
     ref.current.innerHTML = oembedDoc.body.innerHTML;
 
-    // get all the scripts
-    setScripts((prev) => [
-      ...prev,
-      ...Array.from(scripts).filter((s) => !prev.some((p) => p.isEqualNode(s))),
-    ]);
-
     setLoading(false);
-  }, [providerService, url, maxheight, maxwidth, setScripts, ref]);
+  }, [providerService, url, maxheight, maxwidth, ref, runScripts]);
 
   useEffect(() => {
     getOEmbedData();
