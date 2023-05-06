@@ -22,7 +22,7 @@ export default function Home() {
             if (url === "") {
               return;
             }
-            setUrls([...urls, url]);
+            setUrls([url, ...urls]);
           }}
         >
           Add
