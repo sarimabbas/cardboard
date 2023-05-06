@@ -36,18 +36,26 @@ You can also use `yarn` or `pnpm`.
 Use the component like so:
 
 ```jsx
-import { Cardboard, CardboardBox } from "@sarim.garden/cardboard";
+import { CardboardProvider, Cardboard } from "@sarim.garden/cardboard";
 
-// put this anywhere in your app (preferably near the root) to manage scripts
-<CardboardBox/>
-
-// use the component
-<Cardboard url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />;
+const App = () => {
+  return (
+    <CardboardProvider>
+      <Cardboard url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+    </CardboardProvider>
+  );
+};
 ```
 
 Here are the props:
 
 ```tsx
+export interface CardboardProviderProps {
+  children: React.ReactNode;
+  // override the provider to use. Default: https://cardboard-web.vercel.app/api/v1
+  providerService?: string;
+}
+
 export interface CardboardProps {
   // the url to embed
   url: string;
@@ -61,7 +69,5 @@ export interface CardboardProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
-  // the provider to use e.g. https://cardboard-web.vercel.app/api/v1
-  providerService?: string;
 }
 ```
