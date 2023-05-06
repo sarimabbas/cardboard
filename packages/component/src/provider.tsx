@@ -1,19 +1,20 @@
 import { createContext, useCallback, useRef } from "react";
 import { existingScriptOnElement, runExistingRule } from "./scripts";
-import { DOMSet } from "./set";
 
 interface IEmbedContext {
+  // the provider to use e.g. https://cardboard-web.vercel.app/api/v1
+  providerService: string;
+  // run scripts for the embed
   runScripts: (scripts: HTMLScriptElement[]) => void;
 }
 
 export const EmbedContext = createContext<IEmbedContext>({
+  providerService: "",
   runScripts: () => {},
 });
 
-// how many times a script has been added
-const scriptsCache = new DOMSet<HTMLScriptElement>();
-
 interface EmbedProviderProps {
+  providerService?: string;
   children: React.ReactNode;
 }
 
@@ -26,12 +27,7 @@ export const EmbedProvider = (props: EmbedProviderProps) => {
         return;
       }
 
-      // add scripts to cache
       inputScripts.forEach((s) => {
-        scriptsCache.add(s);
-      });
-
-      scriptsCache.forEach((s) => {
         console.log("running script", s);
 
         // create script tag
@@ -78,7 +74,13 @@ export const EmbedProvider = (props: EmbedProviderProps) => {
   );
 
   return (
-    <EmbedContext.Provider value={{ runScripts }}>
+    <EmbedContext.Provider
+      value={{
+        runScripts,
+        providerService:
+          props.providerService ?? "https://cardboard-web.vercel.app/api/v1",
+      }}
+    >
       {props.children}
       <div ref={ref} />
     </EmbedContext.Provider>

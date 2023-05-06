@@ -14,8 +14,6 @@ export interface EmbedProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
-  // the provider to use e.g. https://cardboard-web.vercel.app/api/v1
-  providerService?: string;
   // attempt to make the embed responsive
   responsive?: boolean;
 }
@@ -28,12 +26,11 @@ export const Embed = (props: EmbedProps) => {
     placeholder,
     error,
     className,
-    providerService = "https://cardboard-web.vercel.app/api/v1",
     responsive,
   } = props;
 
   const [loading, setLoading] = useState(true);
-  const { runScripts } = useContext(EmbedContext);
+  const { runScripts, providerService } = useContext(EmbedContext);
 
   // use ref instead of state to avoid fallback to pre-embed html
   const ref = useRef<HTMLDivElement>(null);
