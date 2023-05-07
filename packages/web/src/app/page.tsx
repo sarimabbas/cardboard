@@ -29,9 +29,9 @@ export default function Home() {
         </button>
       </div>
       <CardboardProvider providerService="/api/v1">
-        <div className="flex flex-wrap gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           {urls.map((url, idx) => (
-            <Cardboard url={url} key={`${idx}=${url}`} />
+            <Cardboard url={url} key={`${idx}=${url}`} forceFit />
           ))}
         </div>
       </CardboardProvider>

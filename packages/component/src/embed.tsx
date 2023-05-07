@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { EmbedContext } from "./provider";
+import { AutoScale } from "./scale";
 
 export interface EmbedProps {
   // the url to embed
@@ -14,8 +15,8 @@ export interface EmbedProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
-  // attempt to make the embed responsive
-  // forceFit?: boolean;
+  // attempt to make the embed responsive (experimental)
+  forceFit?: boolean;
 }
 
 export const Embed = (props: EmbedProps) => {
@@ -69,6 +70,19 @@ export const Embed = (props: EmbedProps) => {
   useEffect(() => {
     getOEmbedData();
   }, [getOEmbedData]);
+
+  // todo: clean this up
+  if (props.forceFit) {
+    return (
+      <AutoScale>
+        <div ref={parentRef} className={className}>
+          {loading ? placeholder : null}
+          {ref.current?.innerHTML ? null : error}
+          <div ref={ref} />
+        </div>
+      </AutoScale>
+    );
+  }
 
   return (
     <div ref={parentRef} className={className}>

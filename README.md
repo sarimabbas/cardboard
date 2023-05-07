@@ -69,5 +69,7 @@ export interface CardboardProps {
   error?: React.ReactNode;
   // classes to apply to the embed
   className?: string;
+  // attempt to make the embed responsive (experimental)
+  forceFit?: boolean;
 }
 ```
