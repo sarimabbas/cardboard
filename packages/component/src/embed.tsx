@@ -44,6 +44,11 @@ export const Embed = (props: EmbedProps) => {
       body: JSON.stringify({ url, maxheight, maxwidth }),
     });
     const data = await res.json();
+    if (data.error) {
+      console.error(data.error);
+      setLoading(false);
+      return;
+    }
 
     // parse the html from the oembed response
     const parser = new DOMParser();

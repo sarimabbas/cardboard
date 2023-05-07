@@ -1,6 +1,6 @@
 {
   "name": "@sarim.garden/cardboard",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Embed anything from the web in your React app",
   "type": "module",
   "exports": {
