@@ -1,6 +1,7 @@
 {
   "name": "eslint-config-custom",
   "main": "index.js",
+  "private": true,
   "version": "1.0.0",
   "dependencies": {
     "eslint": "latest",
